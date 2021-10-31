@@ -1,0 +1,163 @@
+name: "ubuntu 21.04 linux ansible local CI workflow"
+
+
+on:
+  push:
+    branches: [ main ]
+  schedule:
+      # https://crontab.guru/examples.html #every friday at midnight  
+      - cron:  '0 0 * * FRI' 
+jobs:
+
+  ubuntu-latest-2104-job:
+    name: "docker  ansible ubuntu 21.04"
+    runs-on: ubuntu-latest
+    env:
+      distribution: "ubuntu" #https://hub.docker.com/_/ubuntu
+      version: "latest"
+      name: "ubuntu2104:ansible"
+    steps:
+    - uses: actions/checkout@v2
+    - name: "os fingerprinting"
+      run: |
+        hostnamectl status
+        lsb_release -a
+        lsb_release -d
+        cat /etc/lsb-release
+        cat /etc/issue
+        cat /etc/os-release
+        sudo apt-get install -y neofetch && neofetch    
+    - name: "docker build ubuntu 21.04"
+      run: |
+        # destroyed afterwards (use --rm )
+        # all subsequent Dockerfile commands generate new images and the cache is not used
+        sudo docker build --no-cache --rm  -t ubuntu2104:ansible . --file dockerfiles/Dockerfile.ubuntu2104
+        docker image ls
+        docker image history ubuntu2104:ansible
+        docker system df -v               
+        docker image inspect ubuntu2104:ansible
+    - name: "playbook docker ubuntu 21.04"
+      run: |
+          # destroyed afterwards (use --rm )
+          # all subsequent Dockerfile commands generate new images and the cache is not used
+          sudo docker build --no-cache --rm  -t ubuntu2104:ansible . --file dockerfiles/Dockerfile.ubuntu2104
+          sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --syntax-check
+          sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --check #dry-run
+          sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml
+  
+  ubuntu-latest-2110-job:
+    name: "docker  ansible ubuntu 21.10"
+    runs-on: ubuntu-latest
+    env:
+      distribution: "ubuntu" #https://hub.docker.com/_/ubuntu
+      version: "latest"
+      name: "ubuntu2110:ansible"
+    steps:
+    - uses: actions/checkout@v2
+    - name: "os fingerprinting"
+      run: |
+        hostnamectl status
+        lsb_release -a
+        lsb_release -d
+        cat /etc/lsb-release
+        cat /etc/issue
+        cat /etc/os-release
+        sudo apt-get install -y neofetch && neofetch    
+    - name: "docker build ubuntu 21.10"
+      run: |
+        # destroyed afterwards (use --rm )
+        # all subsequent Dockerfile commands generate new images and the cache is not used
+        sudo docker build --no-cache --rm  -t ${name}  . --file dockerfiles/Dockerfile.ubuntu2110
+        docker image ls
+        docker image history ${name} 
+        docker system df -v               
+        docker image inspect ${name} 
+    - name: "playbook docker ubuntu 21.10"
+      run: |
+          # destroyed afterwards (use --rm )
+          # all subsequent Dockerfile commands generate new images and the cache is not used
+          sudo docker build --no-cache --rm  -t ${name}  . --file dockerfiles/Dockerfile.ubuntu2110
+          sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --syntax-check
+          sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --check #dry-run
+          sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml
+                           
+
+  # ubuntu-2004-job:
+  #   name: "docker archlinux ansible 20.04"
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     distribution: "ubuntu" #https://hub.docker.com/_/ubuntu
+  #     version: "latest"
+  #     name: "ubuntu2104:ansible"    
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: "os fingerprinting"
+  #     run: |
+  #       hostnamectl status
+  #       lsb_release -a
+  #       lsb_release -d
+  #       cat /etc/lsb-release
+  #       cat /etc/issue
+  #       cat /etc/os-release
+  #       sudo apt-get install -y neofetch && neofetch   
+  #   - name: "docker build ubuntu 21.04"
+  #     run: |
+  #       # destroyed afterwards (use --rm )
+  #       # all subsequent Dockerfile commands generate new images and the cache is not used
+  #       sudo docker build --no-cache --rm  -t ubuntu2104:ansible . --file dockerfiles/Dockerfile.ubuntu2104
+  #       docker image ls
+  #       docker image history ubuntu2104:ansible
+  #       docker system df -v               
+  #       docker image inspect ubuntu2104:ansible
+  #   - name: "playbook docker ubuntu 21.04"
+  #     run: |
+  #         # destroyed afterwards (use --rm )
+  #         # all subsequent Dockerfile commands generate new images and the cache is not used
+  #         sudo docker build --no-cache --rm  -t ubuntu2104:ansible . --file dockerfiles/Dockerfile.ubuntu2104
+  #         sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --syntax-check
+  #         sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --check #dry-run
+  #         sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml
+  
+     
+        
+
+
+  # ubuntu-1804-job:
+  #   name: "docker archlinux ansible  ubuntu 18.04"
+  #   runs-on: ubuntu-18.04
+  #   env:
+  #     distribution: "ubuntu" #https://hub.docker.com/_/ubuntu
+  #     version: "latest"
+  #     name: "ubuntu2104:ansible"    
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: "os fingerprinting"
+  #     run: |
+  #       hostnamectl status
+  #       lsb_release -a
+  #       lsb_release -d
+  #       cat /etc/lsb-release
+  #       cat /etc/issue
+  #       cat /etc/os-release
+  #       sudo apt-get install -y neofetch && neofetch    
+  #   - name: "docker build ubuntu 21.04"
+  #     run: |
+  #       # destroyed afterwards (use --rm )
+  #       # all subsequent Dockerfile commands generate new images and the cache is not used
+  #       sudo docker build --no-cache --rm  -t ubuntu2104:ansible . --file dockerfiles/Dockerfile.ubuntu2104
+  #       docker image ls
+  #       docker image history ubuntu2104:ansible
+  #       docker system df -v               
+  #       docker image inspect ubuntu2104:ansible
+  #   - name: "playbook docker ubuntu 21.04"
+  #     run: |
+  #         # destroyed afterwards (use --rm )
+  #         # all subsequent Dockerfile commands generate new images and the cache is not used
+  #         sudo docker build --no-cache --rm  -t ubuntu2104:ansible . --file dockerfiles/Dockerfile.ubuntu2104
+  #         sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --syntax-check
+  #         sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --check #dry-run
+  #         sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml
+  
+
+
+
