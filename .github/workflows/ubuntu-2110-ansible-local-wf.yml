@@ -1,4 +1,4 @@
-name: "ubuntu 21.04 ansible local CI workflow"
+name: "ubuntu 21.10  ansible local CI workflow"
 
 
 on:
@@ -9,13 +9,13 @@ on:
       - cron:  '0 0 * * FRI' 
 jobs:
 
-  ubuntu-latest-2104-job:
-    name: "docker  ansible ubuntu 21.04"
+  ubuntu-latest-2110-job:
+    name: "docker  ansible ubuntu 21.10"
     runs-on: ubuntu-latest
     env:
       distribution: "ubuntu" #https://hub.docker.com/_/ubuntu
       version: "latest"
-      name: "ubuntu2104:ansible"
+      name: "ubuntu2110:ansible"
     steps:
     - uses: actions/checkout@v2
     - name: "os fingerprinting"
@@ -27,21 +27,21 @@ jobs:
         cat /etc/issue
         cat /etc/os-release
         sudo apt-get install -y neofetch && neofetch    
-    - name: "docker build ubuntu 21.04"
+    - name: "docker build ubuntu 21.10"
       run: |
         # destroyed afterwards (use --rm )
         # all subsequent Dockerfile commands generate new images and the cache is not used
-        sudo docker build --no-cache --rm  -t ubuntu2104:ansible . --file dockerfiles/Dockerfile.ubuntu2104
+        sudo docker build --no-cache --rm  -t ${name}  . --file dockerfiles/Dockerfile.ubuntu2110
         docker image ls
-        docker image history ubuntu2104:ansible
+        docker image history ${name} 
         docker system df -v               
-        docker image inspect ubuntu2104:ansible
-    - name: "playbook docker ubuntu 21.04"
+        docker image inspect ${name} 
+    - name: "playbook docker ubuntu 21.10"
       run: |
           # destroyed afterwards (use --rm )
           # all subsequent Dockerfile commands generate new images and the cache is not used
-          sudo docker build --no-cache --rm  -t ubuntu2104:ansible . --file dockerfiles/Dockerfile.ubuntu2104
+          sudo docker build --no-cache --rm  -t ${name}  . --file dockerfiles/Dockerfile.ubuntu2110
           sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --syntax-check
           sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --check #dry-run
           sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml
-  
+                           
