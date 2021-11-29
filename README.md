@@ -1,2 +1,3 @@
 # docker-ubuntu-ansible-githubactions
-dockerfile ubuntu ansible 
+[![ubuntu 21.04 ansible local CI workflow](https://github.com/githubfoam/docker-ubuntu-ansible-githubactions/actions/workflows/ubuntu-2104-ansible-local-wf.yml/badge.svg?branch=main)](https://github.com/githubfoam/docker-ubuntu-ansible-githubactions/actions/workflows/ubuntu-2104-ansible-local-wf.yml)  
+[![ubuntu 21.10  ansible local CI workflow](https://github.com/githubfoam/docker-ubuntu-ansible-githubactions/actions/workflows/ubuntu-2110-ansible-local-wf.yml/badge.svg?branch=main)](https://github.com/githubfoam/docker-ubuntu-ansible-githubactions/actions/workflows/ubuntu-2110-ansible-local-wf.yml)
