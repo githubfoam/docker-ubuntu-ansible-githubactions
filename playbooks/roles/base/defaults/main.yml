@@ -1,6 +1,6 @@
 ---
 system_packages:
-  - git
+  # - git #22.04
   - unzip
   - tar
   - build-essential
