@@ -1,0 +1,12 @@
+#https://hub.docker.com/_/ubuntu
+FROM ubuntu:22.04    
+LABEL org.opencontainers.image.authors="githubfoam"
+
+#https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu
+RUN apt-get update && apt-get install -y --no-install-recommends software-properties-common
+RUN add-apt-repository --yes --update ppa:ansible/ansible & apt-get install ansible -y 
+
+#testing
+RUN ansible --version
+
+WORKDIR /home/ansible

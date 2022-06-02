@@ -22,6 +22,6 @@ RUN apt-get update \
     && rm -Rf /usr/share/doc && rm -Rf /usr/share/man
     
 # Install Ansible via Pip
-RUN pip3 install ansible 
+RUN pip3 install ansible && ansible --version
 
 WORKDIR /home/ansible

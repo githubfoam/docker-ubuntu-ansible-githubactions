@@ -1,4 +1,4 @@
-name: "ubuntu 22.04 ansible local CI workflow"
+name: "ubuntu 22.04 ansible pip local CI workflow"
 
 
 on:
@@ -16,8 +16,6 @@ jobs:
       distribution: "ubuntu" #https://hub.docker.com/_/ubuntu
       version: "latest"
       name: "ubuntu2204:ansible"
-      dockerfile: "Dockerfile.ubuntu2204"
-      dockerdir: "dockerfiles"
     steps:
     - uses: actions/checkout@v2
     - name: "os fingerprinting"
@@ -33,8 +31,7 @@ jobs:
       run: |
         # destroyed afterwards (use --rm )
         # all subsequent Dockerfile commands generate new images and the cache is not used
-        # sudo docker build --no-cache --rm  -t ${name}  . --file dockerfiles/Dockerfile.ubuntu2204.pip
-        sudo docker build --no-cache --rm  -t ${name}  . --file ${dockerdir}/${dockerfile}
+        sudo docker build --no-cache --rm  -t ${name}  . --file dockerfiles/Dockerfile.ubuntu2204.pip
         docker image ls
         docker image history ${name} 
         docker system df -v               
@@ -43,8 +40,7 @@ jobs:
       run: |
           # destroyed afterwards (use --rm )
           # all subsequent Dockerfile commands generate new images and the cache is not used
-          # sudo docker build --no-cache --rm  -t ${name}  . --file dockerfiles/Dockerfile.ubuntu2204.pip
-          sudo docker build --no-cache --rm  -t ${name}  . --file ${dockerdir}/${dockerfile}
+          sudo docker build --no-cache --rm  -t ${name}  . --file dockerfiles/Dockerfile.ubuntu2204.pip
           sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --syntax-check
           sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml --check #dry-run
           sudo docker run -e ANSIBLE_FORCE_COLOR=1 --privileged --volume="${PWD}":/home/ansible:ro ${name} ansible-playbook -vvv /home/ansible/playbooks/playbook.yml
