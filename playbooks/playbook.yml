@@ -3,6 +3,7 @@
   become: yes
   roles:
     - { role: base, tags: ['base'] }
+    - role: gantsign.visual-studio-code
     # - { role: bootstrap, tags: ['bootstrap'] }
     # - { role: yay, tags: ['yay'] }
     # - { role: useradd, tags: ['useradd'] }
