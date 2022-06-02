@@ -3,10 +3,10 @@ name: "ubuntu 22.04 ansible pip local CI workflow"
 
 on:
   push:
-    branches: [ main ]
-  schedule:
-      # https://crontab.guru/examples.html #every friday at midnight  
-      - cron:  '0 0 * * FRI' 
+    branches: [ test ]
+  # schedule:
+  #     # https://crontab.guru/examples.html #every friday at midnight  
+  #     - cron:  '0 0 * * FRI' 
 jobs:
 
   ubuntu-latest-2110-job:
